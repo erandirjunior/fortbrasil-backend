@@ -1,0 +1,31 @@
+version: '3.5'
+services:
+  fortbrasil:
+    image: webdevops/php-apache:7.4
+    volumes:
+      - .:/var/www/html
+    environment:
+      - WEB_DOCUMENT_ROOT=/var/www/html/public
+    ports:
+      - 8081:80
+    depends_on:
+      - fortbrasil_db
+  composer:
+    container_name: fortbrasil
+    image: composer
+    volumes:
+      - ./:/app
+    command: composer update
+  fortbrasil_db:
+    image: mysql:5.7
+    ports:
+      - "3306:3306"
+    command: --init-file /data/application/dump.sql
+    volumes:
+      - ./dump/dump.sql:/data/application/dump.sql
+      - dba:/var/lib/mysql
+    environment:
+      - MYSQL_DATABASE=fortbrasil
+      - MYSQL_ROOT_PASSWORD=root
+volumes:
+  dba:
