@@ -6,13 +6,13 @@ use SRC\Domain\Exception\ServerException;
 use SRC\Domain\Exception\ValidateException;
 use SRC\Domain\User\Interfaces\CreateRepository;
 use SRC\Domain\User\Interfaces\UserInput;
-use SRC\Domain\User\Interfaces\Validator;
+use SRC\Domain\User\Interfaces\ValidateDataCreation;
 
 class Create
 {
     private CreateRepository $repository;
 
-    private Validator $validator;
+    private ValidateDataCreation $validator;
 
     private UserInput $boundery;
 
@@ -22,7 +22,7 @@ class Create
 
     public function __construct(
         CreateRepository $createRepository,
-        Validator $validator,
+        ValidateDataCreation $validator,
         ServerException $serverException,
         ValidateException $validateException
     )
