@@ -2,7 +2,7 @@
 
 namespace SRC\Domain\User\Interfaces;
 
-interface Validator
+interface ValidateDataCreation
 {
     public function validate(UserInput $userInput): bool;
 
