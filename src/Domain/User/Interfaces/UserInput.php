@@ -9,4 +9,6 @@ interface UserInput
     public function getEmail(): string;
 
     public function getPassword(): string;
+
+    public function getPasswordEncrypted();
 }

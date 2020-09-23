@@ -64,4 +64,11 @@ class UserBoundery implements UserInput
     {
         $this->password = $password ? $password : '';
     }
+
+    public function getPasswordEncrypted()
+    {
+        return password_hash($this->password, PASSWORD_ARGON2I);
+    }
+
+
 }
