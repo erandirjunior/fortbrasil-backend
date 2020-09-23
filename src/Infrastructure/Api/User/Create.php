@@ -10,7 +10,7 @@ use SRC\Infrastructure\Repository\User;
 
 class Create
 {
-    public function create(Request $request)
+    public function execute(Request $request)
     {
         $connection = new Connection();
         $repository = new User($connection->getConnection());

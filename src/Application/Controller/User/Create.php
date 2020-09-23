@@ -7,29 +7,28 @@ use SRC\Application\Exception\ValidateException;
 use SRC\Application\Presenter\JsonPresenter;
 use SRC\Application\Repository\User;
 use SRC\Domain\User\Interfaces\UserInput;
-use \SRC\Domain\User\Interfaces\Validator as UserValidator;
+use SRC\Domain\User\Interfaces\ValidateDataCreation;
 
 class Create
 {
-
-    private UserValidator $validator;
+    private ValidateDataCreation $validator;
 
     private User $repository;
 
     private JsonPresenter $presenter;
 
     public function __construct(
-        UserValidator $validator,
+        ValidateDataCreation $validateDataCreation,
         User $user,
         JsonPresenter $jsonPresenter
     )
     {
-        $this->validator = $validator;
+        $this->validator = $validateDataCreation;
         $this->repository = $user;
         $this->presenter = $jsonPresenter;
     }
 
-    public function create(UserInput $userInput)
+    public function run(UserInput $userInput)
     {
         $validateException  = new ValidateException();
         $serverException    = new ServerException();
