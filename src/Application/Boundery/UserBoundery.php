@@ -1,10 +1,12 @@
 <?php
 
-namespace SRC\Infrastructure\Boundery;
+namespace SRC\Application\Boundery;
 
+use SRC\Domain\Exception\ValidateException;
 use SRC\Domain\User\Interfaces\UserInput;
+use SRC\Domain\User\Interfaces\UserUpdateInput;
 
-class UserBoundery implements UserInput
+class UserBoundery implements UserInput, UserUpdateInput
 {
     private $name;
 
@@ -12,19 +14,26 @@ class UserBoundery implements UserInput
 
     private $password;
 
+    private ValidateException $validateException;
+
     /**
      * UserBoundery constructor.
      * @param $name
      * @param $email
      * @param $password
      */
-    public function __construct($name, $email, $password)
+    public function __construct(
+        ValidateException $validateException,
+        $name,
+        $email,
+        $password
+    )
     {
+        $this->validateException = $validateException;
         $this->setName($name);
         $this->setEmail($email);
         $this->setPassword($password);
     }
-
 
     public function getName(): string
     {
@@ -36,7 +45,13 @@ class UserBoundery implements UserInput
      */
     public function setName($name): void
     {
-        $this->name = $name ? $name : '';
+        if (empty($name)) {
+            $this->validateException->setMessage('Campo nome não pode ser vazio!');
+
+            throw $this->validateException;
+        }
+
+        $this->name = $name;
     }
 
     public function getEmail(): string
@@ -49,7 +64,13 @@ class UserBoundery implements UserInput
      */
     public function setEmail($email): void
     {
-        $this->email = $email ? $email : '';
+        if (empty($email)) {
+            $this->validateException->setMessage('Campo email não pode ser vazio!');
+
+            throw $this->validateException;
+        }
+
+        $this->email = $email;
     }
 
     public function getPassword(): string
@@ -62,13 +83,11 @@ class UserBoundery implements UserInput
      */
     public function setPassword($password): void
     {
-        $this->password = $password ? $password : '';
+        $this->password = $password;
     }
 
     public function getPasswordEncrypted()
     {
         return password_hash($this->password, PASSWORD_ARGON2I);
     }
-
-
 }

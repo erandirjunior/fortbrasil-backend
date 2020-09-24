@@ -40,7 +40,7 @@ class User implements
 
     private function passwordHasAcceptableLength($password)
     {
-        if (!empty($password) && strlen($password) > 6) {
+        if (!empty($password) && strlen($password) < 6) {
             $this->errors[] = 'Tamanho mínimo da senha são de 6 caracteres!';
         }
     }

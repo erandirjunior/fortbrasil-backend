@@ -1,6 +1,6 @@
 <?php
 
-namespace SRC\Infrastructure\Boundery;
+namespace SRC\Application\Boundery;
 
 use SRC\Domain\Establishment\Interfaces\InputBoundery;
 

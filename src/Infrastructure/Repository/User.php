@@ -33,14 +33,39 @@ class User implements \SRC\Application\Repository\User
 
         $stmt->bindValue(1, $email);
 
-        return $stmt->execute() ? $stmt->fetchAll(\PDO::FETCH_ASSOC) : [];
+        return $stmt->execute() ? $stmt->fetch(\PDO::FETCH_ASSOC) : [];
     }
 
-    public function update(UserInput $userInput, int $id): bool
+    public function find(int $id): array
+    {
+        $stmt = $this->connection->prepare("SELECT * FROM user WHERE id = ?");
+
+        $stmt->bindValue(1, $id);
+
+        return $stmt->execute() ? $stmt->fetch(\PDO::FETCH_ASSOC) : [];
+    }
+
+    public function delete(int $id)
     {
         $stmt = $this->connection->prepare("UPDATE user
                                             SET
-                                                name = ?, email = ?, password = ?
+                                                deleted_at = now()
+                                            WHERE
+                                                id = ?");
+
+        $stmt->bindValue(1, $id);
+
+        $stmt->execute();
+    }
+
+    public function updateAll(UserInput $userInput, int $id): bool
+    {
+        $stmt = $this->connection->prepare("UPDATE user
+                                            SET
+                                                name = ?,
+                                                email = ?,
+                                                password = ?,
+                                                updated_at = NOW()
                                             WHERE
                                                 id = ?");
 
@@ -49,7 +74,22 @@ class User implements \SRC\Application\Repository\User
         $stmt->bindValue(3, $userInput->getPasswordEncrypted());
         $stmt->bindValue(4, $id);
 
-        return $stmt->execute() ? $this->connection->lastInsertId() : 0;
+        return $stmt->execute();
+    }
+
+    public function updateNameAndEmail(UserInput $userInput, int $id): bool
+    {
+        $stmt = $this->connection->prepare("UPDATE user
+                                            SET
+                                                name = ?, email = ?, updated_at = NOW()
+                                            WHERE
+                                                id = ?");
+
+        $stmt->bindValue(1, $userInput->getName());
+        $stmt->bindValue(2, $userInput->getEmail());
+        $stmt->bindValue(3, $id);
+
+        return $stmt->execute();
     }
 
     public function checkIfHasCanUseEmail(string $email, int $id): bool
@@ -62,14 +102,5 @@ class User implements \SRC\Application\Repository\User
         $stmt->execute();
 
         return !!$stmt->fetchAll(\PDO::FETCH_ASSOC);
-    }
-
-    public function find(int $id): array
-    {
-        $stmt = $this->connection->prepare("SELECT * FROM user WHERE id = ?");
-
-        $stmt->bindValue(1, $id);
-
-        return $stmt->execute() ? $stmt->fetch(\PDO::FETCH_ASSOC) : [];
     }
 }

@@ -2,7 +2,7 @@
 
 namespace SRC\Application\Controller\User;
 
-use SRC\Application\Boundery\UserBoundery;
+use SRC\Application\Boundery\UserLoginBoundery;
 use SRC\Application\Exception\ServerException;
 use SRC\Application\Exception\ValidateException;
 use SRC\Application\Presenter\JsonPresenter;
@@ -10,54 +10,40 @@ use SRC\Application\Repository\User;
 use SRC\Domain\User\Interfaces\UserInput;
 use SRC\Domain\User\Interfaces\ValidateDataUpdate;
 
-class Update
+class Login
 {
-
-    private ValidateDataUpdate $validator;
-
     private User $repository;
 
     private JsonPresenter $presenter;
 
     public function __construct(
-        ValidateDataUpdate $validator,
         User $user,
         JsonPresenter $jsonPresenter
     )
     {
-        $this->validator = $validator;
         $this->repository = $user;
         $this->presenter = $jsonPresenter;
     }
 
-    public function run(array $data, int $id)
+    public function run(array $data)
     {
         $validateException  = new ValidateException();
-        $serverException    = new ServerException();
 
         try {
-            /*$controller = new GetUserDataById($this->repository);
-            $user = $controller->run($id);*/
-
-            $updatedPassword = !!$data['password'];
-
-            $boundery = new UserBoundery(
+            $boundery = new UserLoginBoundery(
                 $validateException,
-                $data['name'],
                 $data['email'],
                 $data['password']
             );
 
-            $domain = new \SRC\Domain\User\Update(
+            $domain = new \SRC\Domain\User\Login(
                 $this->repository,
-                $this->validator,
-                $serverException,
                 $validateException
             );
 
-            $domain->update($boundery, $id, $updatedPassword);
+            $userData = $domain->login($boundery);
 
-            echo $this->presenter->json(204);
+            echo $this->presenter->json(200, $userData);
         } catch (\Exception $exception) {
             echo $this->presenter->json($exception->getCode(), $exception->getMessage());
         }

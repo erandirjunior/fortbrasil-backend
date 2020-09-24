@@ -33,14 +33,14 @@ class Update
         $this->validateException = $validateException;
     }
 
-    public function update(UserInput $userInput, int $id)
+    public function update(UserUpdateInput $updateInput, int $id, bool $updatedPassword)
     {
-        $this->boundery = $userInput;
+        $this->boundery = $updateInput;
 
-        $this->createIfDataAreValids($id);
+        $this->createIfDataAreValids($id, $updatedPassword);
     }
 
-    private function createIfDataAreValids($id)
+    private function createIfDataAreValids($id, $updatedPassword)
     {
         if ($this->validator->validateUpdateData($this->boundery)) {
             $this->validateException
@@ -49,10 +49,10 @@ class Update
             throw $this->validateException;
         }
 
-        return $this->createIfUniqueEmail($id);
+        return $this->createIfUniqueEmail($id, $updatedPassword);
     }
 
-    private function createIfUniqueEmail($id)
+    private function createIfUniqueEmail($id, $updatedPassword)
     {
         if ($this->repository->checkIfHasCanUseEmail($this->boundery->getEmail(), $id)) {
             $this->validateException
@@ -61,14 +61,32 @@ class Update
             throw $this->validateException;
         }
 
-        return $this->save();
+        return $this->save($id, $updatedPassword);
     }
 
-    private function save()
+    private function save($id, $updatedPassword)
     {
-        $id = $this->repository->update($this->boundery);
+        if (!$updatedPassword) {
+            $this->updateNameAndEmail($id);
 
-        if (!$id) {
+            return;
+        }
+
+        $this->updateAllData($id);
+    }
+
+    private function updateAllData($id)
+    {
+        if (!$this->repository->updateAll($this->boundery, $id)) {
+            $this->serverException->setMessage('Houve um erro ao atualizar os dados!');
+
+            throw $this->serverException;
+        }
+    }
+
+    private function updateNameAndEmail($id)
+    {
+        if (!$this->repository->updateNameAndEmail($this->boundery, $id)) {
             $this->serverException->setMessage('Houve um erro ao atualizar os dados!');
 
             throw $this->serverException;
