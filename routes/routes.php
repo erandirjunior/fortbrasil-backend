@@ -13,7 +13,18 @@ $route->options('/{anything}', function () {
 $route->post('login', '\\User\\Login@execute');
 $route->post('register', '\\User\\Create@execute');
 
-$route->group(['prefix' => '/', 'namespace' => 'SRC\Infrastructure\Api'], function ($route) {
+$route->get('/permissions', function (\PlugRoute\Http\Response $response) {
+    echo $response
+        ->setStatusCode(403)
+        ->json(['access_permission' => "Você não tem permissão para acessar essa página"]);
+
+})->name('permissions');
+
+$route->group([
+    'prefix' => '/',
+    'namespace' => 'SRC\Infrastructure\Api',
+    'middlewares'=> [\SRC\Infrastructure\Auth\Middleware::class]
+], function ($route) {
     $route->group(['prefix' => 'users'], function ($route) {
         $route->get('/{id:\d+}', '\\User\\Find@execute');
         $route->put('/{id:\d+}', '\\User\\Update@execute');
@@ -21,14 +32,11 @@ $route->group(['prefix' => '/', 'namespace' => 'SRC\Infrastructure\Api'], functi
     });
 
     $route->group(['prefix' => 'establishments'], function ($route) {
-        $route->post('', '\\User\\Create@execute');
-        $route->get('/names', '\\User\\Find@execute');
-        $route->get('/names', '\\User\\Find@execute');
-        $route->put('/{id:\d+}', '\\User\\Update@execute');
-        $route->delete('/{id:\d+}', '\\User\\Delete@execute');
+        $route->post('', '\\Establishment\\Create@execute');
+        $route->get('', '\\Establishment\\Find@execute');
+        $route->put('/{id:\d+}', '\\Establishment\\Update@execute');
+        $route->delete('/{id:\d+}', '\\Establishment\\Delete@execute');
     });
-
-    $route->get('establishments', '\\Establishment@create');
 });
 
 
