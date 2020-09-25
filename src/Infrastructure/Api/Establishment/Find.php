@@ -8,23 +8,21 @@ use SRC\Infrastructure\Presenter\JsonPresenter;
 use SRC\Infrastructure\Repository\Contact;
 use SRC\Infrastructure\Repository\Establishment;
 
-class Create
+class Find
 {
     public function execute(Request $request)
     {
         $connection = new Connection();
         $repository = new Establishment($connection->getConnection());
-        $contactrepository = new Contact($connection->getConnection());
-        $validator  = new \SRC\Infrastructure\Validator\Establishment();
+        $contactRepository = new Contact($connection->getConnection());
         $presenter  = new JsonPresenter();
 
-        $controller = new \SRC\Application\Controller\Establishment\Create(
+        $controller = new \SRC\Application\Controller\Establishment\Find(
             $repository,
-            $validator,
             $presenter,
-            $contactrepository
+            $contactRepository
         );
 
-        $controller->run($request->all());
+        $controller->run($request->query());
     }
 }

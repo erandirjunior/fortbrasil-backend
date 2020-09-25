@@ -10,7 +10,7 @@ use SRC\Application\Repository\Contact;
 use SRC\Application\Repository\Establishment;
 use SRC\Domain\Establishment\Interfaces\Validator;
 
-class Create
+class Update
 {
     private Establishment $repository;
 
@@ -21,7 +21,7 @@ class Create
     private JsonPresenter $presenter;
 
     /**
-     * Create constructor.
+     * Update constructor.
      * @param Establishment $repository
      * @param Validator $validator
      */
@@ -38,7 +38,7 @@ class Create
         $this->contactRepository = $contactRepository;
     }
 
-    public function run(array $data)
+    public function run(array $data, int $establishmentId)
     {
         $validateException  = new ValidateException();
         $serverException    = new ServerException();
@@ -46,28 +46,28 @@ class Create
         try {
             $inputBoundery = $this->createEstablishmentBoundery($data);
 
-            $domain = new \SRC\Domain\Establishment\Create(
+            $domain = new \SRC\Domain\Establishment\Update(
                 $this->repository,
                 $this->validator,
                 $serverException,
                 $validateException
             );
 
-            $id = $domain->create($inputBoundery);
+            $domain->update($inputBoundery, $establishmentId);
 
-            $this->saveContacts($data, $id);
+            $this->saveContacts($data, $establishmentId);
 
-            echo $this->presenter->json(201);
+            echo $this->presenter->json(204);
         } catch (\Exception $exception) {
             echo $this->presenter->json($exception->getCode(), $exception->getMessage());
         }
     }
 
     /**
-     * @param $data
+     * @param $complement
      * @return EstablishmentBoundery
      */
-    private function createEstablishmentBoundery($data): EstablishmentBoundery
+    protected function createEstablishmentBoundery($data): EstablishmentBoundery
     {
         return new EstablishmentBoundery(
             $data['name'],
@@ -87,13 +87,11 @@ class Create
     protected function saveContacts(array $data, $id): void
     {
         if (!empty($data['contacts'])) {
-            $contactCreate = new \SRC\Application\Controller\Contact\Create(
+            $contactUpdate = new \SRC\Application\Controller\Contact\Update(
                 $this->contactRepository
             );
 
-            foreach ($data['contacts'] as $contact) {
-                $contactCreate->run($contact, $id);
-            }
+            $contactUpdate->run($data['contacts'], $id);
         }
     }
 }

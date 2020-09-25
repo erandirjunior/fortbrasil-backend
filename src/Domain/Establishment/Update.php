@@ -4,13 +4,14 @@ namespace SRC\Domain\Establishment;
 
 use SRC\Domain\Establishment\Interfaces\CreateRepository;
 use SRC\Domain\Establishment\Interfaces\InputBoundery;
+use SRC\Domain\Establishment\Interfaces\UpdateRepository;
 use SRC\Domain\Establishment\Interfaces\Validator;
 use SRC\Domain\Exception\ServerException;
 use SRC\Domain\Exception\ValidateException;
 
-class Create
+class Update
 {
-    private CreateRepository $repository;
+    private UpdateRepository $repository;
 
     private Validator $validator;
 
@@ -21,26 +22,26 @@ class Create
     private InputBoundery $inputBoundery;
 
     public function __construct(
-        CreateRepository $createRepository,
+        UpdateRepository $updateRepository,
         Validator $validator,
         ServerException $serverException,
         ValidateException $validateException
     )
     {
-        $this->repository = $createRepository;
+        $this->repository = $updateRepository;
         $this->validator = $validator;
         $this->serverException = $serverException;
         $this->validateException = $validateException;
     }
 
-    public function create(InputBoundery $inputBoundery)
+    public function update(InputBoundery $inputBoundery, int $id)
     {
         $this->inputBoundery = $inputBoundery;
 
-        return $this->createIfDataAreValids();
+        $this->createIfDataAreValids($id);
     }
 
-    private function createIfDataAreValids()
+    private function createIfDataAreValids($id)
     {
         if ($this->validator->validate($this->inputBoundery)) {
             $this->validateException
@@ -49,19 +50,15 @@ class Create
             throw $this->validateException;
         }
 
-        return $this->save();
+        $this->save($id);
     }
 
-    private function save()
+    private function save($id)
     {
-        $id = $this->repository->create($this->inputBoundery);
-
-        if (!$id) {
-            $this->serverException->setMessage('Houve um erro ao registrar os dados');
+        if (!$this->repository->update($this->inputBoundery, $id)) {
+            $this->serverException->setMessage('Houve um erro ao atualizar os dados!');
 
             throw $this->serverException;
         }
-
-        return $id;
     }
 }

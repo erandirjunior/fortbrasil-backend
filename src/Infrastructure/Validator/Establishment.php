@@ -40,7 +40,7 @@ class Establishment implements Validator
             $this->errors[] = 'Campo de endereço não pode ser vazio!';
         }
 
-        !!$this->errors;
+        return !!$this->errors;
     }
 
     public function getErrors(): array

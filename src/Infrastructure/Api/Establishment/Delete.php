@@ -5,26 +5,21 @@ namespace SRC\Infrastructure\Api\Establishment;
 use PlugRoute\Http\Request;
 use SRC\Infrastructure\Database\Connection;
 use SRC\Infrastructure\Presenter\JsonPresenter;
-use SRC\Infrastructure\Repository\Contact;
 use SRC\Infrastructure\Repository\Establishment;
 
-class Create
+class Delete
 {
     public function execute(Request $request)
     {
         $connection = new Connection();
         $repository = new Establishment($connection->getConnection());
-        $contactrepository = new Contact($connection->getConnection());
-        $validator  = new \SRC\Infrastructure\Validator\Establishment();
         $presenter  = new JsonPresenter();
 
-        $controller = new \SRC\Application\Controller\Establishment\Create(
+        $controller = new \SRC\Application\Controller\Establishment\Delete(
             $repository,
-            $validator,
-            $presenter,
-            $contactrepository
+            $presenter
         );
 
-        $controller->run($request->all());
+        $controller->run($request->parameter('id'));
     }
 }

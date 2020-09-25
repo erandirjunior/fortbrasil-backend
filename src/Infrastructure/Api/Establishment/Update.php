@@ -8,7 +8,7 @@ use SRC\Infrastructure\Presenter\JsonPresenter;
 use SRC\Infrastructure\Repository\Contact;
 use SRC\Infrastructure\Repository\Establishment;
 
-class Create
+class Update
 {
     public function execute(Request $request)
     {
@@ -18,13 +18,13 @@ class Create
         $validator  = new \SRC\Infrastructure\Validator\Establishment();
         $presenter  = new JsonPresenter();
 
-        $controller = new \SRC\Application\Controller\Establishment\Create(
+        $controller = new \SRC\Application\Controller\Establishment\Update(
             $repository,
             $validator,
             $presenter,
             $contactrepository
         );
 
-        $controller->run($request->all());
+        $controller->run($request->all(), $request->parameter('id'));
     }
 }

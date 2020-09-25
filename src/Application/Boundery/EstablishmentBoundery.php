@@ -3,16 +3,25 @@
 namespace SRC\Application\Boundery;
 
 use SRC\Domain\Establishment\Interfaces\InputBoundery;
+use SRC\Domain\Establishment\Interfaces\InputSearchBoundery;
 
-class EstablishmentBoundery implements InputBoundery
+class EstablishmentBoundery implements
+    InputBoundery,
+    InputSearchBoundery
 {
     private $name;
+
     private $zipCode;
-    private $street;
-    private $number;
-    private $complement;
+
     private $city;
+
     private $state;
+
+    private $street;
+
+    private $number;
+
+    private $complement;
 
     /**
      * EstablishmentBoundery constructor.
@@ -20,19 +29,19 @@ class EstablishmentBoundery implements InputBoundery
      * @param $zipCode
      * @param $street
      * @param $number
-     * @param $complement
      * @param $city
      * @param $state
+     * @param $complement
      */
-    public function __construct($name, $zipCode, $street, $number, $complement, $city, $state)
+    public function __construct($name, $zipCode,  $state, $city, $street, $number, $complement)
     {
         $this->name = $name;
         $this->zipCode = $zipCode;
+        $this->state = $state;
+        $this->city = $city;
         $this->street = $street;
         $this->number = $number;
         $this->complement = $complement;
-        $this->city = $city;
-        $this->state = $state;
     }
 
     public function getName(): string
@@ -42,7 +51,7 @@ class EstablishmentBoundery implements InputBoundery
 
     public function getZipCode(): string
     {
-        return $this->zipCode;
+        return str_replace('-', '', $this->zipCode);
     }
 
     public function getStreet(): string
