@@ -64,7 +64,7 @@ class Update
     }
 
     /**
-     * @param $complement
+     * @param $data
      * @return EstablishmentBoundery
      */
     protected function createEstablishmentBoundery($data): EstablishmentBoundery
@@ -75,8 +75,7 @@ class Update
             $data['state'],
             $data['city'],
             $data['street'],
-            $data['number'],
-            $data['complement']
+            $data['number']
         );
     }
 

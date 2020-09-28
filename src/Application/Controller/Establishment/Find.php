@@ -29,9 +29,9 @@ class Find
 
     public function run(array $data)
     {
-        $inputBoundery = $this->createEstablishmentBoundery($data);
-        $domain = new \SRC\Domain\Establishment\Find($this->repository);
-        $data = $domain->find($inputBoundery);
+        $inputBoundery  = $this->createEstablishmentBoundery($data);
+        $domain         = new \SRC\Domain\Establishment\Find($this->repository);
+        $data           = $domain->find($inputBoundery);
         $contactController = new FindByEstablishment($this->contactRepository);
 
         foreach ($data as $key => $stablishment) {

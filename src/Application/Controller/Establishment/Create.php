@@ -75,8 +75,7 @@ class Create
             $data['state'],
             $data['city'],
             $data['street'],
-            $data['number'],
-            $data['complement']
+            $data['number']
         );
     }
 

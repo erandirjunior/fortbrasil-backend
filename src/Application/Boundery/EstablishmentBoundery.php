@@ -21,8 +21,6 @@ class EstablishmentBoundery implements
 
     private $number;
 
-    private $complement;
-
     /**
      * EstablishmentBoundery constructor.
      * @param $name
@@ -31,9 +29,8 @@ class EstablishmentBoundery implements
      * @param $number
      * @param $city
      * @param $state
-     * @param $complement
      */
-    public function __construct($name, $zipCode,  $state, $city, $street, $number, $complement)
+    public function __construct($name, $zipCode,  $state, $city, $street, $number)
     {
         $this->name = $name;
         $this->zipCode = $zipCode;
@@ -41,7 +38,6 @@ class EstablishmentBoundery implements
         $this->city = $city;
         $this->street = $street;
         $this->number = $number;
-        $this->complement = $complement;
     }
 
     public function getName(): string
@@ -62,11 +58,6 @@ class EstablishmentBoundery implements
     public function getNumber(): int
     {
         return $this->number;
-    }
-
-    public function getComplement(): string
-    {
-        return $this->complement;
     }
 
     public function getCity(): string
