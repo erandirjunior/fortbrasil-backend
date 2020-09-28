@@ -56,7 +56,7 @@ class Update
 
     public function saveContactData(array $contact)
     {
-        $boundery = new Contact($contact['type'], $contact['phone']);
+        $boundery = new Contact($contact['phone']);
 
         $this->repository->update($boundery, $contact['id']);
     }

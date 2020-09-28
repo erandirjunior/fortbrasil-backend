@@ -18,22 +18,22 @@ class Create
     public function create(array $contact, int $establishmentId)
     {
         if ($this->checkIfCanSaveContact($contact)) {
-            return $this->save($contact['type'], $contact['phone'], $establishmentId);
+            return $this->save($contact['phone'], $establishmentId);
         }
     }
 
     private function checkIfCanSaveContact($contact)
     {
-        if (empty($contact['type']) || empty($contact['phone'])) {
+        if (empty($contact['phone'])) {
             return false;
         }
 
         return true;
     }
 
-    private function save($type, $phone, $establishmentId)
+    private function save($phone, $establishmentId)
     {
-        $contact = new Contact($type, $phone);
+        $contact = new Contact($phone);
 
         return $this->repository->create($contact, $establishmentId);
     }
