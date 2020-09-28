@@ -2,7 +2,7 @@
 
 namespace SRC\Infrastructure\Security;
 
-class Token
+class Token implements \SRC\Domain\User\Interfaces\Token
 {
     public function encode($data)
     {
