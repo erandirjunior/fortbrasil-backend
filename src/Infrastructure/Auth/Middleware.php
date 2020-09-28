@@ -8,7 +8,7 @@ use SRC\Infrastructure\Security\Token;
 
 class Middleware implements PlugRouteMiddleware
 {
-    public function handle(Request $request): Request
+    public function handler(Request $request)
     {
         try {
             $token = $request->header('HTTP_AUTHORIZATION');
@@ -20,7 +20,5 @@ class Middleware implements PlugRouteMiddleware
         } catch (\Exception $e) {
             return $request->redirectToRoute('permissions');
         }
-
-        return $request;
     }
 }
