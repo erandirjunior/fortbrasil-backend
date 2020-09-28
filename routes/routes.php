@@ -10,8 +10,8 @@ $route->options('/{anything}', function () {
     return '';
 });
 
-$route->post('login', '\\User\\Login@execute');
-$route->post('register', '\\User\\Create@execute');
+$route->post('/login', 'SRC\\Infrastructure\\Api\User\\Login@execute');
+$route->post('/register', 'SRC\\Infrastructure\\Api\User\\Create@execute');
 
 $route->get('/permissions', function (\PlugRoute\Http\Response $response) {
     echo $response
