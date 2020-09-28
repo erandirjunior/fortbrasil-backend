@@ -17,9 +17,9 @@ class Establishment implements \SRC\Application\Repository\Establishment
     public function create(InputBoundery $inputBoundery)
     {
         $stmt = $this->connection->prepare("INSERT INTO establishment
-                                                (name, zip_code, number, street, city, state, complement)
+                                                (name, zip_code, number, street, city, state)
                                             VALUE
-                                                (?, ?, ?, ?, ?, ?, ?)");
+                                                (?, ?, ?, ?, ?, ?)");
 
         $stmt->bindValue(1, $inputBoundery->getName());
         $stmt->bindValue(2, $inputBoundery->getZipCode());
@@ -27,7 +27,6 @@ class Establishment implements \SRC\Application\Repository\Establishment
         $stmt->bindValue(4, $inputBoundery->getStreet());
         $stmt->bindValue(5, $inputBoundery->getCity());
         $stmt->bindValue(6, $inputBoundery->getState());
-        $stmt->bindValue(7, $inputBoundery->getComplement());
 
         return $stmt->execute() ? $this->connection->lastInsertId() : 0;
     }
@@ -55,7 +54,6 @@ class Establishment implements \SRC\Application\Repository\Establishment
                                                 street = ?,
                                                 city = ?,
                                                 state = ?,
-                                                complement = ?,
                                                 updated_at = NOW()
                                             WHERE
                                                 id = ?");
@@ -66,8 +64,7 @@ class Establishment implements \SRC\Application\Repository\Establishment
         $stmt->bindValue(4, $inputBoundery->getStreet());
         $stmt->bindValue(5, $inputBoundery->getCity());
         $stmt->bindValue(6, $inputBoundery->getState());
-        $stmt->bindValue(7, $inputBoundery->getComplement());
-        $stmt->bindValue(8, $id);
+        $stmt->bindValue(7, $id);
 
         return $stmt->execute();
     }
@@ -81,8 +78,7 @@ class Establishment implements \SRC\Application\Repository\Establishment
                                                 number,
                                                 street,
                                                 city,
-                                                state,
-                                                complement
+                                                state
                                             FROM
                                                 establishment
                                             WHERE

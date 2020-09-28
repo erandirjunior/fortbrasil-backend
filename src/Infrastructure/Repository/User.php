@@ -32,8 +32,9 @@ class User implements \SRC\Application\Repository\User
         $stmt = $this->connection->prepare("SELECT * FROM user WHERE email = ?");
 
         $stmt->bindValue(1, $email);
+        $stmt->execute();
 
-        return $stmt->execute() ? $stmt->fetch(\PDO::FETCH_ASSOC) : [];
+        return $stmt->rowCount() > 0 ? $stmt->fetch(\PDO::FETCH_ASSOC) : [];
     }
 
     public function find(int $id): array
