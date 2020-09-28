@@ -12,8 +12,6 @@ interface InputBoundery
 
     public function getNumber(): int;
 
-    public function getComplement(): string;
-
     public function getCity(): string;
 
     public function getState(): string;

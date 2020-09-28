@@ -7,6 +7,7 @@ use SRC\Infrastructure\Boundery\UserBoundery;
 use SRC\Infrastructure\Database\Connection;
 use SRC\Infrastructure\Presenter\JsonPresenter;
 use SRC\Infrastructure\Repository\User;
+use SRC\Infrastructure\Security\Token;
 
 class Login
 {
@@ -18,7 +19,8 @@ class Login
 
         $controller = new \SRC\Application\Controller\User\Login(
             $repository,
-            $presenter
+            $presenter,
+            new Token()
         );
 
         $controller->run($request->all());

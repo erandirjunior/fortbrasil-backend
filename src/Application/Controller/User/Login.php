@@ -7,6 +7,7 @@ use SRC\Application\Exception\ServerException;
 use SRC\Application\Exception\ValidateException;
 use SRC\Application\Presenter\JsonPresenter;
 use SRC\Application\Repository\User;
+use SRC\Domain\User\Interfaces\Token;
 use SRC\Domain\User\Interfaces\UserInput;
 use SRC\Domain\User\Interfaces\ValidateDataUpdate;
 
@@ -16,13 +17,17 @@ class Login
 
     private JsonPresenter $presenter;
 
+    private Token $token;
+
     public function __construct(
         User $user,
-        JsonPresenter $jsonPresenter
+        JsonPresenter $jsonPresenter,
+        Token $token
     )
     {
         $this->repository = $user;
         $this->presenter = $jsonPresenter;
+        $this->token = $token;
     }
 
     public function run(array $data)
@@ -38,7 +43,8 @@ class Login
 
             $domain = new \SRC\Domain\User\Login(
                 $this->repository,
-                $validateException
+                $validateException,
+                $this->token
             );
 
             $userData = $domain->login($boundery);
