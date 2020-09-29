@@ -85,12 +85,10 @@ class Update
      */
     protected function saveContacts(array $data, $id): void
     {
-        if (!empty($data['contacts'])) {
-            $contactUpdate = new \SRC\Application\Controller\Contact\Update(
-                $this->contactRepository
-            );
+        $contactUpdate = new \SRC\Application\Controller\Contact\Update(
+            $this->contactRepository
+        );
 
-            $contactUpdate->run($data['contacts'], $id);
-        }
+        $contactUpdate->run($data['contacts'], $id);
     }
 }
