@@ -6,6 +6,10 @@ use \PlugRoute\Http\RequestCreator;
 
 $route = new PlugRoute(new RouteContainer(), RequestCreator::create());
 
+$route->get('/', function () {
+    echo 'aqui';
+});
+
 $route->options('/{anything}', function () {
     return '';
 });
@@ -22,8 +26,8 @@ $route->get('/permissions', function (\PlugRoute\Http\Response $response) {
 
 $route->group([
     'prefix' => '/',
-    'namespace' => 'SRC\Infrastructure\Api',
-    'middlewares'=> [\SRC\Infrastructure\Auth\Middleware::class]
+    'namespace' => 'SRC\Infrastructure\Api'/*,
+    'middlewares'=> [\SRC\Infrastructure\Auth\Middleware::class]*/
 ], function ($route) {
     $route->group(['prefix' => 'users'], function ($route) {
         $route->get('/{id:\d+}', '\\User\\Find@execute');
